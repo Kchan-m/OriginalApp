@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 class AddFave : AppCompatActivity() {
     private lateinit var binding: FaveAddBinding
 
-    val faveDao = SampleApplication.database.faveDao()
+    val faveDao = Application.database.faveDao()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -3,7 +3,7 @@ package app.sato.kchan.originalapp
 import android.app.Application
 import androidx.room.Room
 
-class SampleApplication : Application() {
+class Application : Application() {
     companion object {
         lateinit var database: DataBase
     }
