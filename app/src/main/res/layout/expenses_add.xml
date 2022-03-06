@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="50dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editYearText"
+                android:layout_width="80dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center_horizontal"
+                android:hint="Year"
+                android:inputType="date" />
+
+            <TextView
+                android:id="@+id/yearTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="年" />
+
+            <EditText
+                android:id="@+id/editMonthText"
+                android:layout_width="80dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center_horizontal"
+                android:hint="Month"
+                android:inputType="date" />
+
+            <TextView
+                android:id="@+id/monthTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="月" />
+
+            <EditText
+                android:id="@+id/editDayText"
+                android:layout_width="80dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center_horizontal"
+                android:hint="Day"
+                android:inputType="date" />
+
+            <TextView
+                android:id="@+id/dayTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="日" />
+
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="30sp"
+            android:layout_weight="1"
+            app:layout_constraintTop_toTopOf="@id/date" />
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30sp"
+            android:layout_weight="1"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <EditText
+            android:id="@+id/order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30sp"
+            android:layout_weight="1"
+            android:gravity="clip_horizontal|center_horizontal"
+            android:hint="購入したもの"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30sp"
+            android:layout_weight="1"
+            android:gravity="clip_horizontal|center_horizontal"
+            android:hint="価格"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/memo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30sp"
+            android:layout_weight="1"
+            android:gravity="clip_horizontal|center_horizontal"
+            android:hint="メモ"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30sp"
+            android:layout_weight="1"
+            android:text="追加する" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
