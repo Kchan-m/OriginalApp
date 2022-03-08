@@ -9,9 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="30dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,13 +89,33 @@
             android:layout_weight="1"
             app:layout_constraintTop_toTopOf="@id/date" />
 
-        <ImageView
-            android:id="@+id/image_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30sp"
             android:layout_weight="1"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <Button
+                android:id="@+id/add_imagaview_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15sp"
+                android:layout_marginEnd="15sp"
+                android:layout_weight="1"
+                android:backgroundTint="#FF669A"
+                android:text="写真を追加する"
+                android:textSize="13sp" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/order"
@@ -133,6 +153,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30sp"
             android:layout_weight="1"
+            android:backgroundTint="#FF669A"
             android:text="追加する" />
 
     </LinearLayout>

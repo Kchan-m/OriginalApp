@@ -9,7 +9,7 @@ interface FaveDao {
     fun createFave(fave: Fave)
 
     @Query("SELECT * FROM Fave")
-    fun findAll(): Flowable<List<Fave>>
+    fun findAll(): List<Fave>
 
     @Update
     fun updateAddress(fave: Fave)

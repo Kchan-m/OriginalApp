@@ -10,7 +10,10 @@ class Application : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        database = Room.databaseBuilder(this, objectOf<DataBase>(), "kotlin_room_sample.db").allowMainThreadQueries().build()
+        database = Room.databaseBuilder(this, objectOf<DataBase>(), "kotlin_room_sample.db")
+            .allowMainThreadQueries()
+            //.fallbackToDestructiveMigration()
+            .build()
     }
 }
 

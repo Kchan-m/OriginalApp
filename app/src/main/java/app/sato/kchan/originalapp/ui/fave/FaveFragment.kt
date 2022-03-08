@@ -8,15 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import app.sato.kchan.originalapp.AddFave
+import app.sato.kchan.originalapp.AddFaveActivity
 import app.sato.kchan.originalapp.Application
+import app.sato.kchan.originalapp.ExpencesDetailActivity
 import app.sato.kchan.originalapp.FaveDao
 import app.sato.kchan.originalapp.databinding.FragmentFaveBinding
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class FaveFragment : Fragment() {
 
@@ -38,27 +35,27 @@ class FaveFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(FaveViewModel::class.java)
-
         _binding = FragmentFaveBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textFave
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        binding.faveList.setOnItemClickListener { adapterView, view, position, id ->
+            val expencesDetailActivityIntent: Intent = Intent(activity, ExpencesDetailActivity::class.java)
+            expencesDetailActivityIntent.putExtra("id", position.toLong())
+            startActivity(expencesDetailActivityIntent)
         }
 
-
-        getFave(requireContext())
-
-        val addFaveIntent: Intent = Intent(activity, AddFave::class.java)
+        val addFaveIntent: Intent = Intent(activity, AddFaveActivity::class.java)
 
         binding.fab.setOnClickListener {
             startActivity(addFaveIntent)
             getFave(requireContext())
         }
         return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getFave(requireContext())
     }
 
     override fun onDestroyView() {
@@ -69,23 +66,13 @@ class FaveFragment : Fragment() {
     private fun getFave(context: Context){
         //ioスレッド：DBからデータ取得
         //mainスレッド：取得結果をUIに表示
-        faveDao.findAll()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    //データ取得完了時の処理
-                    val data = ArrayList<String>()
-                    it.forEach { fave -> data.add(fave.name) }
-                    //リスト項目とListViewを対応付けるArrayAdapterを用意する
-                    //リストで使用するlayout（simple_list_item_1）を指定する
-                    val adapter = ArrayAdapter(
-                        context, R.layout.simple_list_item_1, data)
-                    binding.faveList.adapter = adapter
-                }
-                , {
-                    //エラー処理
-                }
-            )
+        val faveData = faveDao.findAll()
+        val data = ArrayList<String>()
+        faveData.forEach { fave -> data.add(fave.name) }
+        //リスト項目とListViewを対応付けるArrayAdapterを用意する
+        //リストで使用するlayout（simple_list_item_1）を指定する
+        val adapter = ArrayAdapter(
+            context, R.layout.simple_list_item_1, data)
+        binding.faveList.adapter = adapter
     }
 }

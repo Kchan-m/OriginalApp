@@ -6,6 +6,8 @@
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_fave.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_detail_expenses.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_expenses_detail.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24444444444444444" />
         <entry key="app/src/main/res/layout/expenses_add.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fave_add.xml" value="0.165" />
