@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1027285519638",
+    "project_id": "original-63a35",
+    "storage_bucket": "original-63a35.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027285519638:android:556337d8adf9da14451437",
+        "android_client_info": {
+          "package_name": "app.sato.kchan.originalapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027285519638-69jhkesg8bbbprduv8nnsmt6r175fov1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF4v0FN8Zu5YiFllI4AagKFJNJcN4BQ4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027285519638-69jhkesg8bbbprduv8nnsmt6r175fov1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

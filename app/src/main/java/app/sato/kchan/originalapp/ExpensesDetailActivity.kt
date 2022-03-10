@@ -1,15 +1,16 @@
 package app.sato.kchan.originalapp
 
 import android.R
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import app.sato.kchan.originalapp.databinding.ActivityDetailExpensesBinding
+import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
 
-class ExpencesDetailActivity : AppCompatActivity() {
+class ExpensesDetailActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityDetailExpensesBinding
 
     val expensesDao = Application.database.expensesDao()
@@ -19,11 +20,9 @@ class ExpencesDetailActivity : AppCompatActivity() {
         binding = ActivityDetailExpensesBinding.inflate(layoutInflater).apply { setContentView(this.root) }
 
         val intent: Intent = getIntent()
-        val id: Long = intent.getLongExtra("id", 0)
+        val id = intent.getLongExtra("id", 0)
 
-        // roomに保存するときのidは1から、positionは0からなので1足す
-        getExpenses(id+1)
-
+        getExpenses(id)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -37,22 +36,19 @@ class ExpencesDetailActivity : AppCompatActivity() {
     }
 
     private fun getExpenses(id: Long){
-        val expensesData = expensesDao.findAll()
+        val storage = FirebaseStorage.getInstance()
+        val userImageRef = storage.reference.child("images")
 
-        val eIdData = ArrayList<Long>()
-        expensesData.forEach { expenses -> eIdData.add(expenses.faveID) }
-        val expences = ArrayList<String>()
-        expensesData.forEach { expenses -> expences.add(expenses.order) }
+        Glide.with(this)
+            .asBitmap()
+            .load(userImageRef)
+            .into(binding.orderImageView)
 
-        val data = ArrayList<String>()
-        for (i in 0 until eIdData.size) {
-            if (eIdData[i] == id) {
-                data.add(expences[i])
-            }
-        }
+        val expenses = expensesDao.findId(id)
 
-        val adapter = ArrayAdapter(
-            this, R.layout.simple_list_item_1, data)
-        binding.expensesListview.adapter = adapter
+        binding.dateTextView.setText("${expenses.year}年${expenses.month}月${expenses.day}日")
+        binding.orderTextView.setText(expenses.order)
+        binding.priceTextView.setText("${expenses.price}円")
+        binding.memoTextView.setText(expenses.memo)
     }
 }

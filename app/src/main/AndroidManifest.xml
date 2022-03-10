@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="app.sato.kchan.originalapp">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -29,9 +30,13 @@
             android:label="OriginalApp">
         </activity>
         <activity
-            android:name=".ExpencesDetailActivity"
+            android:name=".FaveDetailActivity"
             android:label="OriginalApp" >
         </activity>
-    </application>
+        <activity
+            android:name=".ExpensesDetailActivity"
+            android:label="OriginalApp" >
 
+        </activity>
+    </application>
 </manifest>

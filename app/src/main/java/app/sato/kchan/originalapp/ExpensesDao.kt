@@ -1,7 +1,6 @@
 package app.sato.kchan.originalapp
 
 import androidx.room.*
-import io.reactivex.Flowable
 
 @Dao
 interface ExpensesDao {
@@ -19,4 +18,7 @@ interface ExpensesDao {
 
     @Query("DELETE FROM Expenses")
     fun deleteAll()
+
+    @Query("SELECT * FROM Expenses WHERE id > :id")
+    fun findId(id: Long): Expenses
 }

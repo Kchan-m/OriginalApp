@@ -4,15 +4,25 @@ import android.R
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import app.sato.kchan.originalapp.databinding.ActivityExpensesAddBinding
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class AddExpensesActivity : AppCompatActivity() {
+
+    val storage = FirebaseStorage.getInstance()
+    val userImageRef = storage.reference.child("images")
+
     private lateinit var binding: ActivityExpensesAddBinding
 
     val faveDao = Application.database.faveDao()
@@ -73,15 +83,27 @@ class AddExpensesActivity : AppCompatActivity() {
         }
         when (requestCode) {
             READ_REQUEST_CODE -> {
-                try {
-                    resultData?.data?.also { uri ->
-                        val inputStream = contentResolver?.openInputStream(uri)
-                        val image = BitmapFactory.decodeStream(inputStream)
-                        val imageView = binding.imageView
-                        imageView.setImageBitmap(image)
+                resultData?.data?.also { uri ->
+                    val inputStream = contentResolver?.openInputStream(uri)
+                    val image = BitmapFactory.decodeStream(inputStream)
+                    val imageView = binding.imageView
+                    imageView.setImageBitmap(image)
+                    var uploadTask: UploadTask
+
+//                    val path = uri.path?: return
+//                    val fpath = File(path)
+//                    val stream = FileInputStream(fpath)
+                    if (inputStream != null) {
+                        uploadTask = userImageRef.putStream(inputStream ?: return)
+                        uploadTask.addOnSuccessListener {
+                            // アップロード成功時
+                            println("success")
+                        }
+                            .addOnFailureListener { error ->
+                                // エラー発生時
+                                println("fail")
+                            }
                     }
-                } catch (e: Exception) {
-                    Toast.makeText(this, "エラーが発生しました", Toast.LENGTH_LONG).show()
                 }
             }
         }

@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import app.sato.kchan.originalapp.AddFaveActivity
 import app.sato.kchan.originalapp.Application
-import app.sato.kchan.originalapp.ExpencesDetailActivity
+import app.sato.kchan.originalapp.FaveDetailActivity
 import app.sato.kchan.originalapp.FaveDao
 import app.sato.kchan.originalapp.databinding.FragmentFaveBinding
 
@@ -38,10 +38,10 @@ class FaveFragment : Fragment() {
         _binding = FragmentFaveBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.faveList.setOnItemClickListener { adapterView, view, position, id ->
-            val expencesDetailActivityIntent: Intent = Intent(activity, ExpencesDetailActivity::class.java)
-            expencesDetailActivityIntent.putExtra("id", position.toLong())
-            startActivity(expencesDetailActivityIntent)
+        binding.faveList.setOnItemClickListener { _, _, position, _ ->
+            val faveDetailActivityIntent: Intent = Intent(activity, FaveDetailActivity::class.java)
+            faveDetailActivityIntent.putExtra("id", position.toLong())
+            startActivity(faveDetailActivityIntent)
         }
 
         val addFaveIntent: Intent = Intent(activity, AddFaveActivity::class.java)
