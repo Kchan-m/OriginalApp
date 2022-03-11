@@ -4,6 +4,7 @@ import android.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import app.sato.kchan.originalapp.databinding.ActivityDetailExpensesBinding
 import com.bumptech.glide.Glide
@@ -20,9 +21,10 @@ class ExpensesDetailActivity : AppCompatActivity() {
         binding = ActivityDetailExpensesBinding.inflate(layoutInflater).apply { setContentView(this.root) }
 
         val intent: Intent = getIntent()
-        val id = intent.getLongExtra("id", 0)
+        val faveId = intent.getLongExtra("id", 1)
+        val position = intent.getIntExtra("position", 0)
 
-        getExpenses(id)
+        getExpenses(faveId, position)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -35,16 +37,32 @@ class ExpensesDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getExpenses(id: Long){
-        val storage = FirebaseStorage.getInstance()
-        val userImageRef = storage.reference.child("images")
+    private fun getExpenses(id: Long, position: Int){
+
+        val expensesData = expensesDao.findAll()
+
+        val faveIdData = ArrayList<Long>()
+        expensesData.forEach { expenses -> faveIdData.add(expenses.faveID) }
+        val allData = ArrayList<Expenses>()
+        expensesData.forEach { expenses -> allData.add(expenses) }
+
+        val data = ArrayList<Expenses>()
+        val idData = ArrayList<Long>()
+        for (i in 0 until faveIdData.size) {
+            if (faveIdData[i] == id) {
+                data.add(allData[i])
+                idData.add(allData[i].id)
+            }
+        }
+
+        val storage = FirebaseStorage.getInstance().reference
+        val userImageRef = storage.child("image" + idData[position] + ".jpg")
 
         Glide.with(this)
-            .asBitmap()
             .load(userImageRef)
             .into(binding.orderImageView)
 
-        val expenses = expensesDao.findId(id)
+        val expenses = data[position]
 
         binding.dateTextView.setText("${expenses.year}年${expenses.month}月${expenses.day}日")
         binding.orderTextView.setText(expenses.order)

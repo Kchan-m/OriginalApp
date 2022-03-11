@@ -6,14 +6,16 @@
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_fave.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_detail_expenses.xml" value="0.165" />
+        <entry key="app/src/main/res/layout/activity_detail_expenses.xml" value="0.14473684210526316" />
         <entry key="app/src/main/res/layout/activity_expenses_add.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_expenses_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_fave_add.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24444444444444444" />
         <entry key="app/src/main/res/layout/expenses_add.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fave_add.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_fave.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.10714285714285714" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.10344827586206896" />
+        <entry key="app/src/main/res/layout/simple_marker_view.xml" value="0.1" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.165" />
       </map>
     </option>

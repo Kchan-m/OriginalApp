@@ -27,7 +27,8 @@ class FaveDetailActivity : AppCompatActivity() {
 
         binding.expensesListview.setOnItemClickListener { _, _, position, _ ->
             val expensesActivityIntent: Intent = Intent(this, ExpensesDetailActivity::class.java)
-            expensesActivityIntent.putExtra("id", position.toLong())
+            expensesActivityIntent.putExtra("id", id+1)
+            expensesActivityIntent.putExtra("position", position)
             startActivity(expensesActivityIntent)
         }
     }
@@ -46,13 +47,13 @@ class FaveDetailActivity : AppCompatActivity() {
 
         val eIdData = ArrayList<Long>()
         expensesData.forEach { expenses -> eIdData.add(expenses.faveID) }
-        val expences = ArrayList<String>()
-        expensesData.forEach { expenses -> expences.add(expenses.order) }
+        val orderData = ArrayList<String>()
+        expensesData.forEach { expenses -> orderData.add(expenses.order) }
 
         val data = ArrayList<String>()
         for (i in 0 until eIdData.size) {
             if (eIdData[i] == id) {
-                data.add(expences[i])
+                data.add(orderData[i])
             }
         }
 

@@ -3,25 +3,24 @@ package app.sato.kchan.originalapp
 import android.R
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import app.sato.kchan.originalapp.databinding.ActivityExpensesAddBinding
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import java.io.File
 import java.io.FileInputStream
-import java.io.InputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class AddExpensesActivity : AppCompatActivity() {
 
-    val storage = FirebaseStorage.getInstance()
-    val userImageRef = storage.reference.child("images")
+class AddExpensesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityExpensesAddBinding
 
@@ -47,10 +46,12 @@ class AddExpensesActivity : AppCompatActivity() {
 
         binding.addImagaviewButton.setOnClickListener {
 
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "image/*"
-            }
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+            // カテゴリーを設定
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            // MIMEタイプを設定
+            intent.type = "image/*"
+
             startActivityForResult(intent, READ_REQUEST_CODE)
         }
 
@@ -64,7 +65,6 @@ class AddExpensesActivity : AppCompatActivity() {
                 binding.editMonthText.text.toString().toInt(),
                 binding.editDayText.text.toString().toInt(),
                 id,
-                //binding.imageView,
                 binding.order.text.toString(),
                 binding.price.text.toString().toInt(),
                 binding.memo.text.toString()
@@ -81,6 +81,8 @@ class AddExpensesActivity : AppCompatActivity() {
         if (resultCode != RESULT_OK) {
             return
         }
+        val storage = FirebaseStorage.getInstance()
+        val userImageRef = storage.reference.child("image" + getExpensesID() + ".jpg")
         when (requestCode) {
             READ_REQUEST_CODE -> {
                 resultData?.data?.also { uri ->
@@ -88,21 +90,13 @@ class AddExpensesActivity : AppCompatActivity() {
                     val image = BitmapFactory.decodeStream(inputStream)
                     val imageView = binding.imageView
                     imageView.setImageBitmap(image)
-                    var uploadTask: UploadTask
 
-//                    val path = uri.path?: return
-//                    val fpath = File(path)
-//                    val stream = FileInputStream(fpath)
-                    if (inputStream != null) {
-                        uploadTask = userImageRef.putStream(inputStream ?: return)
-                        uploadTask.addOnSuccessListener {
-                            // アップロード成功時
-                            println("success")
-                        }
-                            .addOnFailureListener { error ->
-                                // エラー発生時
-                                println("fail")
-                            }
+                    val uploadTask = userImageRef.putFile(uri)
+                    uploadTask.addOnFailureListener {
+                        // Handle unsuccessful uploads
+                    }.addOnSuccessListener { taskSnapshot ->
+                        // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                        // ...
                     }
                 }
             }
@@ -138,5 +132,15 @@ class AddExpensesActivity : AppCompatActivity() {
             }
         }
         return id
+    }
+
+    private fun getExpensesID(): Int {
+        val expensesData = expensesDao.findAll()
+        val idData = ArrayList<Long>()
+        expensesData.forEach {
+            expenses -> idData.add(expenses.id)
+        }
+
+        return idData.size+1
     }
 }
