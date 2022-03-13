@@ -8,11 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.SimpleAdapter
 import androidx.fragment.app.Fragment
-import app.sato.kchan.originalapp.AddFaveActivity
-import app.sato.kchan.originalapp.Application
-import app.sato.kchan.originalapp.FaveDetailActivity
-import app.sato.kchan.originalapp.FaveDao
+import app.sato.kchan.originalapp.*
 import app.sato.kchan.originalapp.databinding.FragmentFaveBinding
 
 class FaveFragment : Fragment() {
@@ -24,10 +22,12 @@ class FaveFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var faveDao: FaveDao
+    private lateinit var expensesDao: ExpensesDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         faveDao = Application.database.faveDao()
+        expensesDao = Application.database.expensesDao()
     }
 
     override fun onCreateView(
@@ -64,15 +64,39 @@ class FaveFragment : Fragment() {
     }
 
     private fun getFave(context: Context){
-        //ioスレッド：DBからデータ取得
-        //mainスレッド：取得結果をUIに表示
         val faveData = faveDao.findAll()
         val data = ArrayList<String>()
         faveData.forEach { fave -> data.add(fave.name) }
-        //リスト項目とListViewを対応付けるArrayAdapterを用意する
-        //リストで使用するlayout（simple_list_item_1）を指定する
-        val adapter = ArrayAdapter(
-            context, R.layout.simple_list_item_1, data)
+
+        val listViewData = mutableListOf<Map<String, String>>()
+        for (i in 1 .. data.size) {
+            val sum = getSum(i)
+            listViewData.add(mapOf("main" to data[i-1] , "sub" to sum.toString()+"円"))
+        }
+
+        val adapter = SimpleAdapter(
+            requireContext(),
+            listViewData,
+            R.layout.simple_list_item_2,
+            arrayOf("main", "sub"),
+            intArrayOf(R.id.text1, R.id.text2))
         binding.faveList.adapter = adapter
+    }
+
+    private fun getSum(id: Int): Int{
+        val expensesData = expensesDao.findAll()
+        var sum = 0
+
+        val eIdData = ArrayList<Long>()
+        expensesData.forEach { expenses -> eIdData.add(expenses.faveID) }
+        val priceData = ArrayList<Int>()
+        expensesData.forEach { expenses ->  priceData.add(expenses.price)}
+
+        val data = ArrayList<String>()
+        for (i in 0 until eIdData.size)  {
+            if (eIdData[i] == id.toLong()) sum += priceData[i]
+        }
+
+        return sum
     }
 }

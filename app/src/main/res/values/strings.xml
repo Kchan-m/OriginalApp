@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OriginalApp</string>
-    <string name="title_home">Home</string>
-    <string name="title_fave">Fave</string>
+    <string name="app_name">推し事支出メモ</string>
+    <string name="title_home">ホーム</string>
+    <string name="title_fave">推し</string>
 </resources>
