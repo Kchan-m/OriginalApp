@@ -9,7 +9,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.view.MenuItem
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import app.sato.kchan.originalapp.databinding.ActivityExpensesAddBinding
 import com.google.firebase.storage.FirebaseStorage
@@ -27,6 +29,7 @@ class AddExpensesActivity : AppCompatActivity() {
     val faveDao = Application.database.faveDao()
     val expensesDao = Application.database.expensesDao()
 
+
     companion object {
         private const val READ_REQUEST_CODE: Int = 42
     }
@@ -34,6 +37,8 @@ class AddExpensesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExpensesAddBinding.inflate(layoutInflater).apply { setContentView(this.root) }
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val year = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"))
         binding.editYearText.setText(year)
@@ -56,23 +61,41 @@ class AddExpensesActivity : AppCompatActivity() {
         }
 
         binding.addButton.setOnClickListener {
-
-            val id = getFaveID()
-
-            val expenses = Expenses(
-                0,
-                binding.editYearText.text.toString().toInt(),
-                binding.editMonthText.text.toString().toInt(),
-                binding.editDayText.text.toString().toInt(),
-                id,
-                binding.order.text.toString(),
-                binding.price.text.toString().toInt(),
-                binding.memo.text.toString()
-            )
-            expensesDao.createExpenses(expenses)
-
-            finish()
+            if (binding.editYearText.text.toString() == "" ||
+                binding.editMonthText.text.toString() == "" ||
+                binding.editDayText.text.toString() == "") {
+                Toast.makeText(this, "日付を入力してください", Toast.LENGTH_LONG).show()
+            } else if (binding.spinner.selectedItem.toString() == "") {
+                Toast.makeText(this, "推しを選択してください", Toast.LENGTH_LONG).show()
+            } else if (binding.order.text.toString() == "") {
+                Toast.makeText(this, "購入したものを入力してください", Toast.LENGTH_LONG).show()
+            } else if (binding.price.text.toString() == "") {
+                Toast.makeText(this, "価格を入力してください", Toast.LENGTH_LONG).show()
+            } else {
+                println("success")
+                val expenses = Expenses(
+                    0,
+                    binding.editYearText.text.toString().toInt(),
+                    binding.editMonthText.text.toString().toInt(),
+                    binding.editDayText.text.toString().toInt(),
+                    getFaveID(),
+                    binding.order.text.toString(),
+                    binding.price.text.toString().toInt(),
+                    binding.memo.text.toString()
+                )
+                expensesDao.createExpenses(expenses)
+                finish()
+            }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item?.itemId){
+            android.R.id.home->{
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     //写真が選択された後の動き
@@ -90,14 +113,7 @@ class AddExpensesActivity : AppCompatActivity() {
                     val image = BitmapFactory.decodeStream(inputStream)
                     val imageView = binding.imageView
                     imageView.setImageBitmap(image)
-
-                    val uploadTask = userImageRef.putFile(uri)
-                    uploadTask.addOnFailureListener {
-                        // Handle unsuccessful uploads
-                    }.addOnSuccessListener { taskSnapshot ->
-                        // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                        // ...
-                    }
+                    userImageRef.putFile(uri)
                 }
             }
         }

@@ -50,8 +50,13 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
         val addExpensesIntent: Intent = Intent(activity, AddExpensesActivity::class.java)
 
-        binding.fab.setOnClickListener {
-            startActivity(addExpensesIntent)
+        if(getFaveID() == 0) {
+            binding.fab.isClickable = false
+            binding.firstText.text = "まずは推し画面から推しを登録してね！"
+        } else {
+            binding.fab.setOnClickListener {
+                startActivity(addExpensesIntent)
+            }
         }
         return root
     }
@@ -66,12 +71,20 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    private fun getFaveID(): Int {
+        val faveData = faveDao.findAll()
+        val idData = ArrayList<Long>()
+        faveData.forEach { fave -> idData.add(fave.id) }
+        return idData.size
+    }
+
     private fun getExpenses(size: Int): ArrayList<Float> {
         val expensesData = expensesDao.findAll()
         val eIdData = ArrayList<Long>()
-        expensesData.forEach { expenses -> eIdData.add(expenses.faveID) }
         val priceAllData = ArrayList<Int>()
-        expensesData.forEach { expenses -> priceAllData.add(expenses.price) }
+        expensesData.forEach { expenses ->
+            eIdData.add(expenses.faveID)
+            priceAllData.add(expenses.price) }
 
         var priceData = ArrayList<Float>()
         for (i in 1..size) {
@@ -95,18 +108,15 @@ class HomeFragment : Fragment() {
 
         //①Entryにデータ格納
         var entryList = mutableListOf<PieEntry>()
-        var listViewData = mutableListOf<Map<String, String>>()
         var sum = 0.0f
-        for (i in 0 until faveNameData.size){
+        for (i in 0 until faveNameData.size) {
             if (priceData[i] != 0.0f) entryList.add(PieEntry(priceData[i], faveNameData[i]))
             sum += priceData[i]
-            listViewData.add(mapOf("main" to faveNameData[i] ,"sub" to priceData[i].toInt().toString()+"円"))
         }
 
         //②PieDataSetにデータ格納
         val pieDataSet = PieDataSet(entryList, "expenses")
         //③DataSetのフォーマット指定
-
         pieDataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
         //④PieDataにPieDataSet格納
         val pieData = PieData(pieDataSet)
@@ -115,30 +125,22 @@ class HomeFragment : Fragment() {
         pieData.setDrawValues(true)
         //⑤PieChartにPieData格納
         val pieChart = binding.pieChart
-        pieChart.data = pieData
-        pieData.setValueFormatter(PercentFormatter(pieChart))
-        //⑥Chartのフォーマット指定
-        pieChart.setUsePercentValues(true)
-        pieChart.setEntryLabelTextSize(15f)
-        pieChart.setCenterTextColor(Color.WHITE)
-        pieChart.legend.isEnabled = false
-        pieChart.setCenterTextSize(20f)
-        pieChart.centerText = "合計 ${sum.toInt()}円"
-        pieChart.setCenterTextColor(Color.BLACK)
-        pieChart.description.text = ""
-        pieChart.setTouchEnabled(false)
-        //⑦PieChart更新
-        pieChart.invalidate()
+        pieChart.setNoDataText("")
+        if (getFaveID() != 0) {
+            pieChart.data = pieData
+            pieData.setValueFormatter(PercentFormatter(pieChart))
+            //⑥Chartのフォーマット指定
+            pieChart.setUsePercentValues(true)
+            pieChart.setEntryLabelTextSize(15f)
+            pieChart.setCenterTextColor(Color.WHITE)
+            pieChart.legend.isEnabled = false
+            pieChart.setCenterTextSize(20f)
+            pieChart.centerText = "合計 ${sum.toInt()}円"
+            pieChart.setCenterTextColor(Color.BLACK)
+            pieChart.description.text = ""
+            pieChart.setTouchEnabled(false)
+            //⑦PieChart更新
+            pieChart.invalidate()
+        }
     }
-
-//    private fun text(listViewData: MutableList<Map<String, String>>) {
-//        val adapter = SimpleAdapter(
-//            requireContext(),
-//            listViewData,
-//            R.layout.simple_list_item_2,
-//            arrayOf("main", "sub"),
-//            intArrayOf(R.id.text1, R.id.text2))
-//        binding.listView.adapter = adapter
-//    }
-
 }

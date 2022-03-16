@@ -65,21 +65,16 @@ class FaveFragment : Fragment() {
 
     private fun getFave(context: Context){
         val faveData = faveDao.findAll()
-        val data = ArrayList<String>()
-        faveData.forEach { fave -> data.add(fave.name) }
+        val faveNameData = ArrayList<String>()
+        faveData.forEach { fave -> faveNameData.add(fave.name) }
 
-        val listViewData = mutableListOf<Map<String, String>>()
-        for (i in 1 .. data.size) {
+        val listViewData = mutableListOf<ListFaveData>()
+        for (i in 1 .. faveNameData.size) {
             val sum = getSum(i)
-            listViewData.add(mapOf("main" to data[i-1] , "sub" to sum.toString()+"円"))
+            listViewData.add(ListFaveData(faveNameData[i-1],sum.toString()+"円"))
         }
 
-        val adapter = SimpleAdapter(
-            requireContext(),
-            listViewData,
-            R.layout.simple_list_item_2,
-            arrayOf("main", "sub"),
-            intArrayOf(R.id.text1, R.id.text2))
+        val adapter = FaveAdapter(requireContext(), listViewData)
         binding.faveList.adapter = adapter
     }
 

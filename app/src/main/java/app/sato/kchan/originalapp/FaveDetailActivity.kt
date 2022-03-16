@@ -1,10 +1,8 @@
 package app.sato.kchan.originalapp
 
-import android.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import app.sato.kchan.originalapp.databinding.ActivityDetailFaveBinding
 
@@ -46,19 +44,33 @@ class FaveDetailActivity : AppCompatActivity() {
         val expensesData = expensesDao.findAll()
 
         val eIdData = ArrayList<Long>()
-        expensesData.forEach { expenses -> eIdData.add(expenses.faveID) }
-        val orderData = ArrayList<String>()
-        expensesData.forEach { expenses -> orderData.add(expenses.order) }
+        val allYearData = ArrayList<Int>()
+        val allMonthData = ArrayList<Int>()
+        val allDayData = ArrayList<Int>()
+        val allOrderData = ArrayList<String>()
+        val allPriceData = ArrayList<Int>()
+        expensesData.forEach {
+                expenses -> eIdData.add(expenses.faveID)
+                            allYearData.add(expenses.year)
+                            allMonthData.add(expenses.month)
+                            allDayData.add(expenses.day)
+                            allPriceData.add(expenses.price)
+                            allOrderData.add(expenses.order) }
 
-        val data = ArrayList<String>()
+        val listViewData = mutableListOf<ListExpensesData>()
         for (i in 0 until eIdData.size) {
             if (eIdData[i] == id) {
-                data.add(orderData[i])
+                listViewData.add(
+                    ListExpensesData(
+                        allYearData[i].toString() + "/" + allMonthData[i].toString() + "/" + allDayData[i].toString(),
+                        allOrderData[i],
+                        allPriceData[i].toString() + "円"
+                    )
+                )
             }
         }
 
-        val adapter = ArrayAdapter(
-            this, R.layout.simple_list_item_1, data)
+        val adapter = ExpensesAdapter(this, listViewData)
         binding.expensesListview.adapter = adapter
     }
 }

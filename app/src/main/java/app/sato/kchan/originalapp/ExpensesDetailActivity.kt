@@ -42,9 +42,10 @@ class ExpensesDetailActivity : AppCompatActivity() {
         val expensesData = expensesDao.findAll()
 
         val faveIdData = ArrayList<Long>()
-        expensesData.forEach { expenses -> faveIdData.add(expenses.faveID) }
         val allData = ArrayList<Expenses>()
-        expensesData.forEach { expenses -> allData.add(expenses) }
+        expensesData.forEach {
+                expenses -> faveIdData.add(expenses.faveID)
+                            allData.add(expenses) }
 
         val data = ArrayList<Expenses>()
         val idData = ArrayList<Long>()
