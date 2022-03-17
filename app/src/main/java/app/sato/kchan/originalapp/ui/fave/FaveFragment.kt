@@ -44,9 +44,18 @@ class FaveFragment : Fragment() {
             startActivity(faveDetailActivityIntent)
         }
 
-        val addFaveIntent: Intent = Intent(activity, AddFaveActivity::class.java)
+        if(getFaveID() == 0) {
+            binding.yenFab.isClickable = false
+            binding.fFirstText.text = "まずは推しを登録してね！"
+        } else {
+            binding.yenFab.setOnClickListener {
+                val addExpensesIntent: Intent = Intent(activity, AddExpensesActivity::class.java)
+                startActivity(addExpensesIntent)
+            }
+        }
 
-        binding.fab.setOnClickListener {
+        binding.faveFab.setOnClickListener {
+            val addFaveIntent: Intent = Intent(activity, AddFaveActivity::class.java)
             startActivity(addFaveIntent)
             getFave(requireContext())
         }
@@ -76,6 +85,8 @@ class FaveFragment : Fragment() {
 
         val adapter = FaveAdapter(requireContext(), listViewData)
         binding.faveList.adapter = adapter
+
+        if (getFaveID() != 0) binding.fFirstText.text = ""
     }
 
     private fun getSum(id: Int): Int{
@@ -91,7 +102,13 @@ class FaveFragment : Fragment() {
         for (i in 0 until eIdData.size)  {
             if (eIdData[i] == id.toLong()) sum += priceData[i]
         }
-
         return sum
+    }
+
+    private fun getFaveID(): Int {
+        val faveData = faveDao.findAll()
+        val idData = ArrayList<Long>()
+        faveData.forEach { fave -> idData.add(fave.id) }
+        return idData.size
     }
 }

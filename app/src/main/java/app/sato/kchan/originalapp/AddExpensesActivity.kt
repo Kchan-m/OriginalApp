@@ -3,6 +3,7 @@ package app.sato.kchan.originalapp
 import android.R
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -20,6 +21,8 @@ import java.io.File
 import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AddExpensesActivity : AppCompatActivity() {
@@ -28,7 +31,6 @@ class AddExpensesActivity : AppCompatActivity() {
 
     val faveDao = Application.database.faveDao()
     val expensesDao = Application.database.expensesDao()
-
 
     companion object {
         private const val READ_REQUEST_CODE: Int = 42
@@ -72,7 +74,6 @@ class AddExpensesActivity : AppCompatActivity() {
             } else if (binding.price.text.toString() == "") {
                 Toast.makeText(this, "価格を入力してください", Toast.LENGTH_LONG).show()
             } else {
-                println("success")
                 val expenses = Expenses(
                     0,
                     binding.editYearText.text.toString().toInt(),
@@ -104,8 +105,15 @@ class AddExpensesActivity : AppCompatActivity() {
         if (resultCode != RESULT_OK) {
             return
         }
+
+        val pref: SharedPreferences = getSharedPreferences("uniqueID", Context.MODE_PRIVATE)
+        val uniqueID = pref.getString("uniqueID", UUID.randomUUID().toString())
+        val editor = pref.edit()
+        editor.putString("uniqueID", uniqueID)
+        editor.apply()
+
         val storage = FirebaseStorage.getInstance()
-        val userImageRef = storage.reference.child("image" + getExpensesID() + ".jpg")
+        val userImageRef = storage.reference.child(uniqueID + "image" + getExpensesID() + ".jpg")
         when (requestCode) {
             READ_REQUEST_CODE -> {
                 resultData?.data?.also { uri ->

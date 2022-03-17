@@ -1,14 +1,17 @@
 package app.sato.kchan.originalapp
 
 import android.R
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import app.sato.kchan.originalapp.databinding.ActivityDetailExpensesBinding
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ExpensesDetailActivity : AppCompatActivity() {
 
@@ -56,8 +59,11 @@ class ExpensesDetailActivity : AppCompatActivity() {
             }
         }
 
+        val pref: SharedPreferences = getSharedPreferences("uniqueID", Context.MODE_PRIVATE)
+        val uniqueID = pref.getString("uniqueID", UUID.randomUUID().toString())
+
         val storage = FirebaseStorage.getInstance().reference
-        val userImageRef = storage.child("image" + idData[position] + ".jpg")
+        val userImageRef = storage.child(uniqueID + "image" + idData[position] + ".jpg")
 
         Glide.with(this)
             .load(userImageRef)

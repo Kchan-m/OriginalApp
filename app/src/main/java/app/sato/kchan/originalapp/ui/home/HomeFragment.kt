@@ -1,28 +1,23 @@
 package app.sato.kchan.originalapp.ui.home
 
-import android.R
-import android.app.ActionBar
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.SimpleAdapter
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import app.sato.kchan.originalapp.AddExpensesActivity
-import app.sato.kchan.originalapp.Application
-import app.sato.kchan.originalapp.ExpensesDao
-import app.sato.kchan.originalapp.FaveDao
+import app.sato.kchan.originalapp.*
 import app.sato.kchan.originalapp.databinding.FragmentHomeBinding
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
+import java.util.*
+import kotlin.collections.ArrayList
 
 class HomeFragment : Fragment() {
 
@@ -48,16 +43,21 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val addExpensesIntent: Intent = Intent(activity, AddExpensesActivity::class.java)
 
         if(getFaveID() == 0) {
-            binding.fab.isClickable = false
-            binding.firstText.text = "まずは推し画面から推しを登録してね！"
+            binding.yenFab.isClickable = false
+            binding.firstText.text = "まずは推しを登録してね！"
         } else {
-            binding.fab.setOnClickListener {
+            binding.yenFab.setOnClickListener {
+                val addExpensesIntent: Intent = Intent(activity, AddExpensesActivity::class.java)
                 startActivity(addExpensesIntent)
             }
         }
+        binding.faveFab.setOnClickListener {
+            val addFaveIntent: Intent = Intent(activity, AddFaveActivity::class.java)
+            startActivity(addFaveIntent)
+        }
+
         return root
     }
 
@@ -141,6 +141,8 @@ class HomeFragment : Fragment() {
             pieChart.setTouchEnabled(false)
             //⑦PieChart更新
             pieChart.invalidate()
+
+            binding.firstText.text = ""
         }
     }
 }

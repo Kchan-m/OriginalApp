@@ -9,6 +9,6 @@
     <item
         android:id="@+id/navigation_fave"
         android:icon="@drawable/ic_fave"
-        android:title="@string/title_fave" />
+        android:title="@string/fave" />
 
 </menu>
