@@ -44,6 +44,12 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+
         if(getFaveID() == 0) {
             binding.yenFab.isClickable = false
             binding.firstText.text = "まずは推しを登録してね！"
@@ -58,11 +64,6 @@ class HomeFragment : Fragment() {
             startActivity(addFaveIntent)
         }
 
-        return root
-    }
-
-    override fun onStart() {
-        super.onStart()
         draw()
     }
 

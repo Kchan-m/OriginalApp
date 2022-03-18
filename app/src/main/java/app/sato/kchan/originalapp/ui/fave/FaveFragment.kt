@@ -44,6 +44,12 @@ class FaveFragment : Fragment() {
             startActivity(faveDetailActivityIntent)
         }
 
+        return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+
         if(getFaveID() == 0) {
             binding.yenFab.isClickable = false
             binding.fFirstText.text = "まずは推しを登録してね！"
@@ -59,11 +65,7 @@ class FaveFragment : Fragment() {
             startActivity(addFaveIntent)
             getFave(requireContext())
         }
-        return root
-    }
 
-    override fun onStart() {
-        super.onStart()
         getFave(requireContext())
     }
 
